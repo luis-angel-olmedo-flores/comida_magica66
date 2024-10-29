@@ -2,41 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservación Restaurante Mágico</title>
-    <link rel="stylesheet" href="CSS/estilos.css">
+    <title>¿Qué personaje de Spider-Man eres? - Test en Vue.js</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Restaurante de Comida Mágica</h1>
-        <form id="reserva-form">
-            <input type="text" id="nombre" placeholder="Nombre" required>
-            <input type="number" id="personas" placeholder="Número de personas (solo adultos)" required>
-            
-            <label for="menu">Selecciona un menú mágico:</label>
-            <select id="menu">
-                <option value="dragones">Menú de Dragones</option>
-                <option value="unicornios">Menú de Unicornios</option>
-            </select>
+    <div id="app">
+        <header>
+            <h1>¿Qué personaje de Spider-Man eres?</h1>
+            <p>Introduce tu nombre para comenzar el test:</p>
+            <input v-model="nombre" type="text" placeholder="Tu nombre">
+            <button @click="empezarTest">Iniciar Test</button>
+        </header>
+        
+        <section v-if="mostrarTest">
+            <h2>Bienvenido, {{ nombre }}</h2>
+            <p>Responde a las siguientes preguntas:</p>
 
-            <label for="ingredientes">Elige ingredientes mágicos:</label>
-            <select id="ingredientes" multiple>
-                <option value="escamas de dragón">Escamas de Dragón</option>
-                <option value="polvo de estrellas">Polvo de Estrellas</option>
-                <option value="lágrimas de unicornio">Lágrimas de Unicornio</option>
-                <option value="esencia de fénix">Esencia de Fénix</option>
-            </select>
-
-            <div id="mensajeConfirmacion"></div>
-
-            <div class="botones">
-                <button type="button" id="hacerReservacion">Hacer Reservación</button>
-                <button type="button" id="generarTicket">Generar Ticket</button>
+            <div v-for="(pregunta, index) in preguntas" :key="index">
+                <p>{{ pregunta.texto }}</p>
+                <label v-for="(respuesta, rIndex) in pregunta.opciones" :key="rIndex">
+                    <input type="radio" class="radio-input" v-model="respuestas[index]" :value="respuesta.puntos">
+                    {{ respuesta.texto }}
+                </label>
             </div>
-        </form>
+
+            <button @click="calcularResultado">Ver Resultado</button>
+        </section>
+
+        <section v-show="mostrarResultado">
+            <h2>Resultado de {{ nombre }}</h2>
+            <p>Total de puntos: {{ totalPuntos }}</p>
+            <p>{{ resultado }}</p>
+            <img v-if="imagenResultado" :src="imagenResultado" alt="Resultado" class="resultado-imagen">
+            <button @click="reiniciarTest">Intentar de nuevo</button>
+        </section>
     </div>
-    <script src="JS/reservacion.js"></script>
+
+    <script src="js/app.js"></script>
 </body>
 </html>
-
